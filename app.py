@@ -1,11 +1,21 @@
+import psycopg2
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+conexao = psycopg2.connect(
+    host="aws-1-us-west-2.pooler.supabase.com",
+    database="postgres",
+    user="postgres.yqwdgsloarwnsqacsvpw",
+    password="HelpDesk2@26!",
+    port="5432"
+)
+
+cursor = conexao.cursor()
+
+print("Banco conectado com sucesso!")
+
 app = Flask(__name__)
 CORS(app)
-
-usuarios = []
-chamados = []
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -50,43 +60,32 @@ def cadastro():
             "mensagem": "Preencha todos os campos"
         })
 
-    for usuario_cadastrado in usuarios:
-        if usuario_cadastrado["email"] == email:
-            return jsonify({
-                "sucesso": False,
-                "mensagem": "Email já cadastrado"
-            })
-        
-        if usuario_cadastrado["telefone"] == telefone:
-            return jsonify({
-                "sucesso": False,
-                "mensagem": "Telefone já cadastrado"
-            })
-        
-        if usuario_cadastrado["cpf"] == cpf:
-            return jsonify({
-                "sucesso": False,
-                "mensagem": "CPF já cadastrado"
-            })
+    
 
-    usuario = {
-        "nome": nome,
-        "email": email,
-        "telefone": telefone,
-        "cpf": cpf,
-        "senha": senha,
-        "tipo": tipoUsuario,
-        "avaliacoes": []
-    }
+    try:
+        cursor.execute(
+            """
+            INSERT INTO usuarios
+            (nome, email, telefone, cpf, senha, tipo)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (nome, email, telefone, cpf, senha, tipoUsuario)
+        )
 
-    usuarios.append(usuario)
+        conexao.commit()
 
-    print(usuarios)
+        return jsonify({
+            "sucesso": True,
+            "mensagem": "Usuário cadastrado com sucesso"
+        })
 
-    return jsonify({
-        "sucesso": True,
-        "mensagem": "Usuário cadastrado com sucesso"
-    })
+    except psycopg2.errors.UniqueViolation:
+        conexao.rollback()
+
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Email, telefone ou CPF já cadastrado"
+        })
 
 @app.route("/tecnicos", methods=["GET"])
 def listar_tecnicos():
