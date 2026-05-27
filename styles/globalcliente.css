@@ -1,0 +1,516 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    min-height: 100vh;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+.navbar {
+    height: 70px;
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 45px;
+}
+
+.navbar h1 {
+    font-weight: 700;
+    font-size: 26px;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 25px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.navbar a:hover {
+    transform: translateY(-2px);
+    color: #93c5fd;
+}
+
+.container {
+    width: 90%;
+    margin: 40px auto;
+}
+
+.hero {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 35px;
+    border-radius: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25);
+}
+
+.hero h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.hero p {
+    color: #dbeafe;
+}
+
+.hero button,
+.card-tecnico button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+    margin-bottom: 0.5rem;
+    margin-top: 0.2rem;
+    font-size: 14.5px;
+}
+
+.hero button {
+    background-color: white;
+    color: #1e40af;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+.hero button:hover,
+.card-tecnico button:hover {
+    transform: translateY(-3px);
+}
+
+.tecnicos-section {
+    margin-top: 40px;
+}
+
+.tecnicos-section h2 {
+    margin-bottom: 20px;
+    color: white;
+    font-weight: 600;
+}
+
+.cards-tecnicos {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 450px);
+    gap: 40px;
+}
+
+.card-tecnico {
+    max-width: 450px;
+    background: rgba(30, 41, 59, 0.9);
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card-tecnico h3 {
+    font-size: 23px;
+    margin-bottom: 13px;
+    color: white;
+    font-weight: 600;
+}
+
+.cargo {
+    color: #60a5fa;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.card-tecnico p {
+    line-height: 1.5;
+    color: #cbd5e1;
+}
+
+.estrelas {
+    color: #f59e0b;
+    font-size: 18px;
+    margin: 18px 0;
+}
+
+.card-tecnico button {
+    background-color: #2563eb;
+    color: white;
+    width: 100%;
+}
+
+.card-tecnico button:hover {
+    background-color: #1d4ed8;
+}
+
+#modal-curriculo {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(2, 6, 23, 0.8);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+}
+
+.curriculo-content {
+    background: #1e293b;
+    color: white;
+    width: 90%;
+    max-width: 520px;
+    padding: 35px;
+    border-radius: 22px;
+    position: relative;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.curriculo-content .fechar-curriculo {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+}
+
+.curriculo-content h2 {
+    font-size: 27px;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.curriculo-content h3 {
+    margin-top: 20px;
+    color: #60a5fa;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.curriculo-content p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.curriculo-content hr {
+    margin: 22px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-tecnico hr {
+    margin: 22px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#modal-chamado {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(2, 6, 23, 0.8);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 2000;
+}
+
+.chamado-content {
+    background: #1e293b;
+    color: white;
+    width: 90%;
+    max-width: 520px;
+    padding: 35px;
+    border-radius: 22px;
+    position: relative;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fechar-chamado {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.chamado-content h2 {
+    font-size: 27px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.chamado-content p {
+    color: #cbd5e1;
+    margin-bottom: 22px;
+}
+
+.chamado-content input,
+.chamado-content select,
+.chamado-content textarea {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #334155;
+    color: white;
+    outline: none;
+    font-size: 15px;
+    transition: 0.25s ease;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 20 20'%3E%3Cpath d='M5 7l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+.chamado-content textarea {
+    min-height: 130px;
+    resize: vertical;
+    font-family: 'Segoe UI', Arial, sans-serif;;
+}
+
+.chamado-content input:focus,
+.chamado-content select:focus,
+.chamado-content textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+.modal-content button {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.modal-content button:hover {
+    transform: translateY(-2px);
+    background-color: #1d4ed8;
+}
+
+.chamado-content button:last-child {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.chamado-content button:last-child:hover {
+    transform: translateY(-2px);
+    background-color: #1d4ed8;
+}
+
+#modal {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+    z-index: 3000;
+}
+
+.modal-content {
+    background-color: #1e293b;
+    width: 350px;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    color: white;
+}
+
+.modal-content button {
+    width: 100%;
+    height: 45px;
+    border: none;
+    border-radius: 12px;
+    background-color: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.modal-content button:hover {
+    transform: translateY(-2px);
+}
+
+#mensagem-modal {
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+#modal h3 {
+    font-weight: 500;
+}
+
+#modal-curriculo {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.75);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+}
+
+#modal-solicitar-tecnico {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(2, 6, 23, 0.8);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 2500;
+}
+
+#modal-solicitar-tecnico .chamado-content {
+    background: #1e293b;
+    color: white;
+    width: 900%;
+    max-width: 520px;
+    padding: 35px;
+    border-radius: 22px;
+    position: relative;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+#modal-solicitar-tecnico h2 {
+    font-size: 27px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+}
+
+#modal-solicitar-tecnico p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+#lista-chamados-cliente {
+    margin-top: 25px;
+}
+
+#lista-chamados-cliente .card-chamado {
+    padding: 0;
+    margin-bottom: 25px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#lista-chamados-cliente .card-chamado h3 {
+    color: #60a5fa;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+#lista-chamados-cliente .card-chamado p {
+    color: #cbd5e1;
+    margin-bottom: 14px;
+}
+
+#lista-chamados-cliente .card-chamado button {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-top: 1rem;
+}
+
+#lista-chamados-cliente .card-chamado button:hover {
+    transform: translateY(-2px);
+    background-color: #1d4ed8;
+}
+
+strong {
+    color: #60a5fa;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+p {
+    color: #cbd5e1;
+    margin: 6px 0;
+}
+
+hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

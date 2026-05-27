@@ -1,0 +1,250 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    min-height: 100vh;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+.navbar {
+    height: 70px;
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 45px;
+}
+
+.navbar h1 {
+    font-weight: 700;
+    font-size: 26px;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 25px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.navbar a:hover {
+    transform: translateY(-2px);
+    color: #93c5fd;
+}
+
+.tecnicos-section h2 {
+    color: white;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.container {
+    width: 90%;
+    margin: 40px auto;
+}
+
+.cards-tecnicos {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 400px);
+    gap: 40px;
+}
+
+.card-chamado {
+    width: 100%;
+    max-width: 500px;
+    background: #1e293b;
+    padding: 28px;
+    border-radius: 22px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 30px;
+    transition: 0.2s;
+    display: grid;
+    gap: 10px;
+}
+
+.card-chamado h3 {
+    color: white;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.card-chamado hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 8px;
+}
+
+.card-chamado p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.card-chamado strong {
+    margin-top: 20px;
+    color: #60a5fa;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+hr {
+    margin: 22px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+button {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    background:#2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-top: 0.2rem;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    background-color: #1d4ed8;
+}
+
+#modal {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+}
+
+.modal-content {
+    background-color: #1e293b;
+    width: 350px;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    color: #cbd5e1;;
+}
+
+.modal-content button {
+    width: 100%;
+    height: 45px;
+    border: none;
+    border-radius: 12px;
+    background-color: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.modal-content button:hover {
+    transform: translateY(-2px);
+    background-color: #1d4ed8;
+}
+
+#mensagem-modal {
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+#modal h3 {
+    font-weight: 500;
+}
+
+#modal-curriculo {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(2, 6, 23, 0.8);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+}
+
+.curriculo-content {
+    background: #1e293b;
+    color: white;
+    width: 90%;
+    max-width: 520px;
+    padding: 35px;
+    border-radius: 22px;
+    position: relative;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.curriculo-content .fechar-curriculo {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+}
+
+.curriculo-content h2 {
+    font-size: 27px;
+    padding: 0;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.curriculo-content h3 {
+    margin-top: 20px;
+    color: #60a5fa;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.curriculo-content p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.curriculo-content hr {
+    margin: 22px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

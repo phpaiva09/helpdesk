@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Suporte | Help Desk</title>
+    <link rel="stylesheet" href="./styles/globaltecnico.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <h1>HelpDesk</h1>
+
+        <nav>
+            <a href="pagetecnico.html">Início</a>
+            <a href="curriculotecnico.html">Meu currículo</a>
+            <a href="meus-chamados-tecnico.html">Meus Chamados</a>
+            <a href="minhacontatecnico.html">Conta</a>
+            <a href="#" onclick="sair()">Sair</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div>
+                <h2>Olá, bem-vindo ao suporte</h2>
+                <p>Gerencie chamados, acompanhe atendimentos e mantenha seu suporte organizado.</p>
+            </div>
+        </section>
+
+        <section class="tecnicos-section">
+            <h2>Chamados disponíveis</h2>
+
+            <div class="cards-tecnicos" id="lista-chamados"></div>
+        </section>
+    </main>
+
+    <div id="modal-curriculo">
+        <div class="curriculo-content">
+            <button class="fechar-curriculo" onclick="fecharCurriculo()">×</button>
+
+            <h2 id="curriculo-nome"></h2>
+            <p id="curriculo-area"></p>
+
+            <hr>
+
+            <h3>Formação</h3>
+            <p id="curriculo-formacao"></p>
+
+            <h3>Experiência</h3>
+            <p id="curriculo-experiencia"></p>
+
+            <h3>Resumo profissional</h3>
+            <p id="curriculo-resumo"></p>
+
+            <h3>Contato</h3>
+            <p id="curriculo-email"></p>
+            <p id="curriculo-telefone"></p>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h3>Atenção</h3>
+            <p id="mensagem-modal"></p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+        document.body.classList.add("loaded");
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

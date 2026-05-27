@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Suporte | Help Desk</title>
+    <link rel="stylesheet" href="./styles/globalcurriculo.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <h1>HelpDesk</h1>
+
+        <nav>
+            <a href="pagetecnico.html">Início</a>
+            <a href="curriculotecnico.html">Meu currículo</a>
+            <a href="meus-chamados-tecnico.html">Meus Chamados</a>
+            <a href="minhacontatecnico.html">Conta</a>
+            <a href="#" onclick="sair()">Sair</a>
+        </nav>
+    </header>
+
+    <section class="perfil-tecnico">
+        <h2>Meu Perfil Profissional</h2>
+        <p>Complete suas informações para aparecer para os clientes.</p>
+
+        <input type="text" id="nome-tecnico" placeholder="Nome profissional">
+        <input type="text" id="formacao-tecnico" placeholder="Formação">
+        <input type="text" id="area-tecnico" placeholder="Área de atuação">
+        <input type="text" id="experiencia-tecnico" placeholder="Experiência">
+
+        <textarea id="resumo-tecnico" placeholder="Resumo profissional"></textarea>
+
+        <button type="button" onclick="salvarPerfilTecnico()">Salvar perfil</button>
+    </section>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h3>Atenção</h3>
+            <p id="mensagem-modal"></p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+        document.body.classList.add("loaded");
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

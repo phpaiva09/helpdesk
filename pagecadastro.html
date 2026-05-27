@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Suporte | Help Desk</title>
+    <link rel="stylesheet" href="./styles/globalcadastro.css" />
+</head>
+<body>
+    <main>
+        <div class="container-login">
+            <h1>HelpDesk</h1>
+            <p>Cadastre sua conta</p>
+
+            <form>
+                <input type="text" placeholder="nome" id="nome-cadastro">
+                <input type="email" placeholder="email" id="email-cadastro">
+                <input type="text" placeholder="telefone" id="telefone-cadastro">
+                <input type="text" placeholder="cpf" id="cpf-cadastro">
+                <input type="password" placeholder="senha" id="senha-cadastro">
+                <input type="password" placeholder="confirme sua senha" id="confirmar-senha-cadastro">
+                
+                <select id="tipo-usuario" required>
+                    <option value="">Selecione o tipo de acesso</option>
+                    <option value="usuario">Usuário</option>
+                    <option value="tecnico">Técnico</option>
+                </select>
+
+                <button type="button" onclick="cadastrar()">Cadastrar</button>
+                <a href="pagelogin.html"><p>Login</p></a>
+            </form>
+        </div>
+    </main>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h3>Atenção</h3>
+            <p id="mensagem-modal"></p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+        document.body.classList.add("loaded");
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

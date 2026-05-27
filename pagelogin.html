@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Suporte | Help Desk</title>
+    <link rel="stylesheet" href="./styles/globallogin.css" />
+</head>
+<body>
+    <main>
+        <div class="container-login">
+            <h1>HelpDesk</h1>
+            <p>Acesse sua conta</p>
+
+            <form>
+                <input type="email" placeholder="email" id="email-login">
+                <input type="password" placeholder="senha" id="senha-login">
+                <button type="button" onclick="login()">Entrar</button>
+                <a href="pagecadastro.html"><p>Cadastrar</p></a>
+            </form>
+        </div>
+    </main>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h3>Atenção</h3>
+            <p id="mensagem-modal"></p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+        document.body.classList.add("loaded");
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>
