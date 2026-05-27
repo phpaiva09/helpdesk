@@ -30,18 +30,28 @@ def login():
             "mensagem": "Preencha todos os campos",
         })
 
-    for usuario in usuarios:
-        if usuario["email"] == email and usuario["senha"] == senha:
-            return jsonify({
-                "sucesso": True,
-                "mensagem": "Login realizado com sucesso!",
-                "tipo": usuario["tipo"]
-            })
+    cursor.execute(
+        """
+        SELECT nome, email, senha, tipo
+        FROM usuarios
+        WHERE email = %s AND senha = %s
+        """,
+        (email, senha)
+    )
 
-    return({
+    usuario = cursor.fetchone()
+
+    if usuario:
+        return jsonify({
+            "sucesso": True,
+            "mensagem": "Login realizado com sucesso!",
+            "tipo": usuario[3]
+        })
+
+    return jsonify({
         "sucesso": False,
-        "mensagem": "Usuário não encontrado ou senha incorreta",
-    }) 
+        "mensagem": "Usuário não encontrado ou senha incorreta"
+    })
 
 @app.route("/cadastro", methods=["POST"])
 def cadastro():
@@ -89,27 +99,72 @@ def cadastro():
 
 @app.route("/tecnicos", methods=["GET"])
 def listar_tecnicos():
-    tecnicos = []
 
-    for tecnico in usuarios:
-        if tecnico["tipo"] == "tecnico" and tecnico.get("formacao") and tecnico.get("area") and tecnico.get("experiencia") and tecnico.get("resumo"):
-        
+    cursor.execute(
+        """
+        SELECT nome, email, telefone, formacao,
+               area, experiencia, resumo
+        FROM usuarios
+        WHERE tipo = 'tecnico'
+        AND formacao IS NOT NULL
+        AND area IS NOT NULL
+        AND experiencia IS NOT NULL
+        AND resumo IS NOT NULL
+        """
+    )
 
-            if len(tecnico["avaliacoes"]) > 0:
-                media = sum(tecnico["avaliacoes"]) / len(tecnico["avaliacoes"])
-            else:
-                media = None
+    tecnicos = cursor.fetchall()
 
-            tecnico["media_avaliacao"] = media
+    lista_tecnicos = []
 
-            tecnicos.append(tecnico)
-        
-    return jsonify(tecnicos)
+    for tecnico in tecnicos:
+        lista_tecnicos.append({
+            "nome": tecnico[0],
+            "email": tecnico[1],
+            "telefone": tecnico[2],
+            "formacao": tecnico[3],
+            "area": tecnico[4],
+            "experiencia": tecnico[5],
+            "resumo": tecnico[6]
+        })
+
+    return jsonify(lista_tecnicos)
 
 @app.route("/listar-chamados", methods=["GET"])
 def listar_chamados():
+    cursor.execute(
+        """
+        SELECT 
+            chamados.id,
+            chamados.titulo,
+            chamados.categoria,
+            chamados.resumo,
+            chamados.status,
+            usuarios.nome,
+            usuarios.email,
+            usuarios.telefone
+        FROM chamados
+        JOIN usuarios ON chamados.cliente_id = usuarios.id
+        """
+    )
 
-    return jsonify(chamados)
+    chamados_banco = cursor.fetchall()
+
+    lista_chamados = []
+
+    for chamado in chamados_banco:
+        lista_chamados.append({
+            "id": chamado[0],
+            "titulo": chamado[1],
+            "categoria": chamado[2],
+            "resumo": chamado[3],
+            "status": chamado[4],
+            "nome": chamado[5],
+            "email": chamado[6],
+            "telefone": chamado[7]
+        })
+
+    return jsonify(lista_chamados)
     
 @app.route("/salvar-perfil", methods=["POST"])
 def salvar_perfil():
@@ -122,23 +177,27 @@ def salvar_perfil():
     experiencia = dados.get("experiencia")
     resumo = dados.get("resumo")
 
-    print("EMAIL RECEBIDO:", email)
-    print("USUARIOS:", usuarios)
+    cursor.execute(
+        """
+        UPDATE usuarios
+        SET nome = %s,
+            formacao = %s,
+            area = %s,
+            experiencia = %s,
+            resumo = %s
+        WHERE email = %s
+        """,
+        (nome, formacao, area, experiencia, resumo, email)
+    )
 
-    for usuario in usuarios:
-        if usuario["email"] == email:
-            usuario["nome"] = nome
-            usuario["formacao"] = formacao
-            usuario["area"] = area
-            usuario["experiencia"] = experiencia
-            usuario["resumo"] = resumo
-            print("USUARIO ENCONTRADO")
-        
-            return jsonify({
-                "sucesso": True,
-                "mensagem": "Perfil salvo com sucesso!"
-            })
-        
+    conexao.commit()
+
+    if cursor.rowcount > 0:
+        return jsonify({
+            "sucesso": True,
+            "mensagem": "Perfil salvo com sucesso!"
+        })
+
     return jsonify({
         "sucesso": False,
         "mensagem": "Técnico não encontrado"
@@ -148,33 +207,40 @@ def salvar_perfil():
 def criar_chamado():
     dados = request.json
 
-    id_chamado = len(chamados) + 1
     email = dados.get("emailUsuario")
     titulo = dados.get("titulo")
     categoria = dados.get("categoria")
     resumo = dados.get("resumo")
-    telefone = dados.get("telefone")
 
-    for usuario in usuarios:
-        if usuario["email"] == email:
-            nome = usuario["nome"]
-            telefone = usuario["telefone"]
+    cursor.execute(
+        """
+        SELECT id
+        FROM usuarios
+        WHERE email = %s
+        """,
+        (email,)
+    )
 
-    chamado = {
-        "id": id_chamado,
-        "nome": nome,
-        "email": email,
-        "telefone": telefone,
-        "titulo": titulo,
-        "categoria": categoria,
-        "resumo": resumo,
-        "status": "pendente",
-        "tecnico": None,
-        "tecnicos_solicitados": [],
-        "tecnicos_recusaram": []
-    }
+    cliente = cursor.fetchone()
 
-    chamados.append(chamado)
+    if not cliente:
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Cliente não encontrado"
+        })
+
+    cliente_id = cliente[0]
+
+    cursor.execute(
+        """
+        INSERT INTO chamados
+        (cliente_id, titulo, categoria, resumo, status)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (cliente_id, titulo, categoria, resumo, "pendente")
+    )
+
+    conexao.commit()
 
     return jsonify({
         "sucesso": True,
@@ -187,13 +253,29 @@ def vizualizar_dados():
 
     email = dados.get("email")
 
-    for usuario in usuarios:
-        if usuario["email"] == email:
-            return jsonify(usuario)
+    cursor.execute(
+        """
+        SELECT nome, email, telefone, cpf, tipo
+        FROM usuarios
+        WHERE email = %s
+        """,
+        (email,)
+    )
+
+    usuario = cursor.fetchone()
+
+    if usuario:
+        return jsonify({
+            "nome": usuario[0],
+            "email": usuario[1],
+            "telefone": usuario[2],
+            "cpf": usuario[3],
+            "tipo": usuario[4]
+        })
 
     return jsonify({
         "sucesso": False,
-        "mensagem": "Usuário não encontardo"
+        "mensagem": "Usuário não encontrado"
     })
  
 @app.route("/aceitar-chamado", methods=["POST"])
@@ -203,23 +285,53 @@ def aceitar_chamado():
     idChamado = dados.get("id")
     emailTecnico = dados.get("email")
 
-    nomeTecnico = ""
+    cursor.execute(
+        """
+        SELECT id, nome
+        FROM usuarios
+        WHERE email = %s
+        """,
+        (emailTecnico,)
+    )
 
-    for usuario in usuarios:
-        if usuario["email"] == emailTecnico:
-            nomeTecnico = usuario["nome"]
+    tecnico = cursor.fetchone()
 
-    for chamado in chamados:
-        if chamado["id"] == idChamado:
-            chamado["status"] = "aceito"
-            chamado["tecnico"] = emailTecnico
-            chamado["nome_tecnico"] = nomeTecnico
-            chamado["tecnicos_solicitados"] = []
+    if not tecnico:
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Técnico não encontrado"
+        })
 
-            return jsonify({
-                "sucesso": True,
-                "mensagem": "Chamado aceito com sucesso!"
-            })
+    tecnico_id = tecnico[0]
+    nome_tecnico = tecnico[1]
+
+    cursor.execute(
+        """
+        UPDATE chamados
+        SET status = %s,
+            tecnico_id = %s,
+            nome_tecnico = %s
+        WHERE id = %s
+        """,
+        ("aceito", tecnico_id, nome_tecnico, idChamado)
+    )
+
+    cursor.execute(
+        """
+        UPDATE solicitacoes
+        SET status = %s
+        WHERE chamado_id = %s
+        AND tecnico_id = %s
+        """,
+        ("aceito", idChamado, tecnico_id)
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Chamado aceito com sucesso!"
+    })
 
 @app.route("/meus-chamados-tecnico", methods=["POST"])
 def listar_meus_chamados_tecnico():
@@ -227,11 +339,48 @@ def listar_meus_chamados_tecnico():
 
     email = dados.get("email")
 
+    cursor.execute(
+        """
+        SELECT
+            chamados.id,
+            chamados.titulo,
+            chamados.categoria,
+            chamados.resumo,
+            chamados.status,
+            usuarios.nome,
+            usuarios.email,
+            usuarios.telefone
+        FROM solicitacoes
+
+        JOIN chamados
+            ON solicitacoes.chamado_id = chamados.id
+
+        JOIN usuarios
+            ON chamados.cliente_id = usuarios.id
+
+        JOIN usuarios AS tecnico
+            ON solicitacoes.tecnico_id = tecnico.id
+
+        WHERE tecnico.email = %s
+        """,
+        (email,)
+    )
+
+    chamados_banco = cursor.fetchall()
+
     meus_chamados = []
 
-    for chamado in chamados:
-        if email in chamado["tecnicos_solicitados"] or chamado["tecnico"] == email:
-            meus_chamados.append(chamado)
+    for chamado in chamados_banco:
+        meus_chamados.append({
+            "id": chamado[0],
+            "titulo": chamado[1],
+            "categoria": chamado[2],
+            "resumo": chamado[3],
+            "status": chamado[4],
+            "nome": chamado[5],
+            "email": chamado[6],
+            "telefone": chamado[7]
+        })
 
     return jsonify(meus_chamados)
 
@@ -241,11 +390,44 @@ def listar_meus_chamados_cliente():
 
     email = dados.get("email")
 
+    cursor.execute(
+        """
+        SELECT
+            chamados.id,
+            chamados.titulo,
+            chamados.categoria,
+            chamados.resumo,
+            chamados.status,
+            usuarios.nome,
+            usuarios.email,
+            usuarios.telefone,
+            tecnico.nome,
+            tecnico.email
+        FROM chamados
+        JOIN usuarios ON chamados.cliente_id = usuarios.id
+        LEFT JOIN usuarios AS tecnico ON chamados.tecnico_id = tecnico.id
+        WHERE usuarios.email = %s
+        """,
+        (email,)
+    )
+
+    chamados_banco = cursor.fetchall()
+
     meus_chamados = []
 
-    for chamado in chamados:
-        if chamado["email"] == email:
-            meus_chamados.append(chamado)
+    for chamado in chamados_banco:
+        meus_chamados.append({
+            "id": chamado[0],
+            "titulo": chamado[1],
+            "categoria": chamado[2],
+            "resumo": chamado[3],
+            "status": chamado[4],
+            "nome": chamado[5],
+            "email": chamado[6],
+            "telefone": chamado[7],
+            "nome_tecnico": chamado[8],
+            "tecnico": chamado[9]
+        })
 
     return jsonify(meus_chamados)
 
@@ -255,32 +437,64 @@ def solicitar_tecnico():
 
     idChamado = dados.get("id")
     emailTecnico = dados.get("emailTecnico")
-    nomeTecnico = None
 
-    for usuario in usuarios:
-        if usuario["email"] == emailTecnico:
-            nomeTecnico = usuario["nome"]
+    cursor.execute(
+        """
+        SELECT id
+        FROM usuarios
+        WHERE email = %s AND tipo = 'tecnico'
+        """,
+        (emailTecnico,)
+    )
 
-    for chamado in chamados:
-        if chamado["id"] == idChamado:
-            if emailTecnico in chamado["tecnicos_recusaram"]:
-                return jsonify({
-                    "sucesso": False,
-                    "mensagem": "Este técnico já recusou esse chamado"
-                })
-            
-            if emailTecnico in chamado["tecnicos_solicitados"]:
-                return jsonify({
-                    "sucesso": False,
-                    "mensagem": "Este técnico já foi solicitado"
-                })
+    tecnico = cursor.fetchone()
 
-            chamado["tecnicos_solicitados"].append(emailTecnico)
+    if not tecnico:
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Técnico não encontrado"
+        })
 
-            return jsonify ({
-                "sucesso": True,
-                "mensagem": "Solicitação realizada com sucesso!"
+    tecnico_id = tecnico[0]
+
+    cursor.execute(
+        """
+        SELECT status
+        FROM solicitacoes
+        WHERE chamado_id = %s AND tecnico_id = %s
+        """,
+        (idChamado, tecnico_id)
+    )
+
+    solicitacao = cursor.fetchone()
+
+    if solicitacao:
+        if solicitacao[0] == "recusado":
+            return jsonify({
+                "sucesso": False,
+                "mensagem": "Este técnico já recusou esse chamado"
             })
+
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Este técnico já foi solicitado"
+        })
+
+    cursor.execute(
+        """
+        INSERT INTO solicitacoes
+        (chamado_id, tecnico_id, status)
+        VALUES (%s, %s, %s)
+        """,
+        (idChamado, tecnico_id, "solicitado")
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Solicitação realizada com sucesso!"
+    })
 
 @app.route("/recusar-chamado", methods=["POST"])
 def recusar_chamado():
@@ -289,19 +503,40 @@ def recusar_chamado():
     idChamado = dados.get("id")
     emailTecnico = dados.get("email")
 
-    for chamado in chamados:
-        if chamado["id"] == idChamado:
-            chamado["status"] = "pendente"
-            chamado["tecnicos_recusaram"].append(emailTecnico)
-            chamado["tecnico"] = None
-            
-            if emailTecnico in chamado["tecnicos_solicitados"]:
-                chamado["tecnicos_solicitados"].remove(emailTecnico)
+    cursor.execute(
+        """
+        SELECT id
+        FROM usuarios
+        WHERE email = %s
+        """,
+        (emailTecnico,)
+    )
 
-            return jsonify ({
-                "sucesso": True,
-                "mensagem": "Chamado recusado"
-            })
+    tecnico = cursor.fetchone()
+
+    if not tecnico:
+        return jsonify({
+            "sucesso": False,
+            "mensagem": "Técnico não encontrado"
+        })
+
+    tecnico_id = tecnico[0]
+
+    cursor.execute(
+        """
+        UPDATE solicitacoes
+        SET status = %s
+        WHERE chamado_id = %s AND tecnico_id = %s
+        """,
+        ("recusado", idChamado, tecnico_id)
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Chamado recusado"
+    })
 
 @app.route("/buscar-tecnico", methods=["POST"])
 def buscar_tecnico():
@@ -309,10 +544,36 @@ def buscar_tecnico():
 
     email = dados.get("email")
 
-    for usuario in usuarios:
-        if usuario["email"] == email and usuario["tipo"] == "tecnico":
+    cursor.execute(
+        """
+        SELECT
+            nome,
+            email,
+            telefone,
+            formacao,
+            area,
+            experiencia,
+            resumo
+        FROM usuarios
+        WHERE email = %s
+        AND tipo = 'tecnico'
+        """,
+        (email,)
+    )
 
-            return jsonify(usuario)
+    tecnico = cursor.fetchone()
+
+    if tecnico:
+        return jsonify({
+            "nome": tecnico[0],
+            "email": tecnico[1],
+            "telefone": tecnico[2],
+            "formacao": tecnico[3],
+            "area": tecnico[4],
+            "experiencia": tecnico[5],
+            "resumo": tecnico[6]
+        })
+
     return jsonify({
         "sucesso": False,
         "mensagem": "Técnico não encontrado"

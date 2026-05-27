@@ -244,8 +244,7 @@ function SolicitarTecnico(emailTecnico) {
             const listaChamados = document.getElementById("lista-chamados-cliente");
 
             const chamadosDisponiveis = chamados.filter(chamado => {
-                return chamado.status === "pendente" &&
-                    !chamado.tecnicos_recusaram.includes(emailTecnico);
+                return chamado.status === "pendente";
             });
 
             if (chamadosDisponiveis.length === 0) {
@@ -350,7 +349,11 @@ function chamadosTecnico() {
         .then(chamados => {
             const listaMeusChamados = document.getElementById("lista-meus-chamados");
 
-            listaMeusChamados.innerHTML = chamados.map(chamado => {
+            const chamadosValidos = chamados.filter(chamado => {
+                return chamado.status !== "recusado";
+            });
+
+            listaMeusChamados.innerHTML = chamadosValidos.map(chamado => {
                 return `
                     <div class="card-chamado">
                         <h3>${chamado.titulo || "Chamado sem título"}</h3>
@@ -467,7 +470,9 @@ function chamadosCliente() {
                     }
                         </p>
                         ${chamado.tecnico ? `
-                            <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">Ver currículo</>
+                            <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">
+                                Ver currículo
+                            </button>
                         ` : ""}
                     </div>
                 `;
