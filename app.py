@@ -1,13 +1,15 @@
 import psycopg2
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 conexao = psycopg2.connect(
-    host="aws-1-us-west-2.pooler.supabase.com",
-    database="postgres",
-    user="postgres.yqwdgsloarwnsqacsvpw",
-    password="HelpDesk2@26!",
-    port="5432"
+    host=os.getenv("DB_HOST"),
+    database=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    port=os.getenv("DB_PORT"),
+    sslmode="require"
 )
 
 cursor = conexao.cursor()
