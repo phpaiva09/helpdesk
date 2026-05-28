@@ -581,4 +581,70 @@ def buscar_tecnico():
         "mensagem": "Técnico não encontrado"
     })
 
+@app.route("/finalizar-chamado", methods=["POST"])
+def finalizar_chamado():
+    dados = request.json
+
+    idChamado = dados.get("id")
+
+    cursor.execute(
+        """
+        UPDATE chamados
+        SET status = %s
+        WHERE id = %s
+        """,
+        ("aguardando_confirmacao", idChamado)
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Chamado enviado para confirmação do cliente!"
+    })
+
+@app.route("/confirmar-chamado", methods=["POST"])
+def confirmar_chamado():
+    dados = request.json
+
+    idChamado = dados.get("id")
+
+    cursor.execute(
+        """
+        UPDATE chamados
+        SET status = %s
+        WHERE id = %s
+        """,
+        ("finalizado", idChamado)
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Chamado finalizado com sucesso!"
+    })
+
+@app.route("/nao-confirmar-chamado", methods=["POST"])
+def nao_confirmar_chamado():
+    dados = request.json
+
+    idChamado = dados.get("id")
+
+    cursor.execute(
+        """
+        UPDATE chamados
+        SET status = %s
+        WHERE id = %s
+        """,
+        ("aceito", idChamado)
+    )
+
+    conexao.commit()
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Chamado retornou para o técnico!"
+    })
+
 app.run(host="0.0.0.0", port=10000)

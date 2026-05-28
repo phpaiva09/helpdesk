@@ -399,10 +399,56 @@ function chamadosTecnico() {
                                 Recusar
                             </button>
                         ` : ""}
+
+                        ${chamado.status === "aceito" ? `
+                            <button onclick="finalizarChamado(${chamado.id})">
+                                Finalizar chamado
+                            </button>
+                        ` : ""}
                     </div>
                 `;
             }).join("");
         })
+}
+
+function confirmarChamado(idChamado) {
+    fetch("https://helpdesk-vnv7.onrender.com/confirmar-chamado", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamado
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            window.location.href = "meus-chamados-cliente.html";
+        }, 1000);
+    });
+}
+
+function naoConfirmarChamado(idChamado) {
+    fetch("https://helpdesk-vnv7.onrender.com/nao-confirmar-chamado", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamado
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            window.location.href = "meus-chamados-cliente.html";
+        }, 1000);
+    });
 }
 
 function chamadosCliente() {
@@ -472,6 +518,16 @@ function chamadosCliente() {
                         ${chamado.tecnico ? `
                             <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">
                                 Ver currículo
+                            </button>
+                        ` : ""}
+
+                        ${chamado.status === "aguardando_confirmacao" ? `
+                            <button onclick="confirmarChamado(${chamado.id})">
+                                Confirmar serviço
+                            </button>
+
+                            <button onclick="naoConfirmarChamado(${chamado.id})">
+                                Não confirmar
                             </button>
                         ` : ""}
                     </div>
@@ -560,6 +616,26 @@ function recusarChamado(idChamado) {
                 window.location.href = "meus-chamados-tecnico.html";
             }, 1000);
         })
+}
+
+function finalizarChamado(idChamado) {
+    fetch("https://helpdesk-vnv7.onrender.com/finalizar-chamado", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamado
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            window.location.href = "meus-chamados-tecnico.html";
+        }, 1000);
+    });
 }
 
 function abrirModal(mensagem) {
