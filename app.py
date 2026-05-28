@@ -579,4 +579,4 @@ def buscar_tecnico():
         "mensagem": "Técnico não encontrado"
     })
 
-app.run(debug=True)
+app.run(host="0.0.0.0", port=10000)
