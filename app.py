@@ -103,13 +103,13 @@ def listar_tecnicos():
     cursor.execute(
         """
         SELECT nome, email, telefone, formacao,
-               area, experiencia, resumo
+            area, experiencia, resumo
         FROM usuarios
         WHERE tipo = 'tecnico'
-        AND formacao IS NOT NULL
-        AND area IS NOT NULL
-        AND experiencia IS NOT NULL
-        AND resumo IS NOT NULL
+        AND formacao != ''
+        AND area != ''
+        AND experiencia != ''
+        AND resumo != ''
         """
     )
 

@@ -600,8 +600,24 @@ function sair() {
     window.location.href = "pagelogin.html"
 }
 
-window.addEventListener("load", carregarTecnicos);
-window.addEventListener("load", carregarChamados);
-window.addEventListener("load", carregarDados);
-window.addEventListener("load", chamadosTecnico);
-window.addEventListener("load", chamadosCliente);
+window.addEventListener("load", () => {
+    if (document.getElementById("lista-tecnicos")) {
+        carregarTecnicos();
+    }
+
+    if (document.getElementById("lista-chamados")) {
+        carregarChamados();
+    }
+
+    if (document.getElementById("dados-conta")) {
+        carregarDados();
+    }
+
+    if (document.getElementById("lista-meus-chamados")) {
+        chamadosTecnico();
+    }
+
+    if (document.getElementById("lista-meus-chamados-cliente")) {
+        chamadosCliente();
+    }
+});
