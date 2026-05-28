@@ -39,7 +39,7 @@ function cadastrar() {
             }
 
             if (dados.sucesso === true) {
-                window.location.href = "pagelogin.html";
+                window.location.href = "index.html";
             }
         });
 }
@@ -597,7 +597,7 @@ function sair() {
     localStorage.removeItem("usuarioLogado");
     localStorage.removeItem("tipoUsuario");
 
-    window.location.href = "pagelogin.html"
+    window.location.href = "index.html"
 }
 
 window.addEventListener("load", () => {
