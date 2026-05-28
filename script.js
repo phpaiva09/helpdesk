@@ -17,7 +17,7 @@ function cadastrar() {
         return;
     }
 
-    fetch("http://127.0.0.1:5000/cadastro", {
+    fetch("https://helpdesk-vnv7.onrender.com/cadastro", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -48,7 +48,7 @@ function login() {
     const emailLogin = document.getElementById("email-login").value;
     const senhaLogin = document.getElementById("senha-login").value;
 
-    fetch("http://127.0.0.1:5000/login", {
+    fetch("https://helpdesk-vnv7.onrender.com/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -90,7 +90,7 @@ function salvarPerfilTecnico() {
     console.log(nome, formacao, area, experiencia, resumo);
     console.log("Email logado:", emailTecnico);
 
-    fetch("http://127.0.0.1:5000/salvar-perfil", {
+    fetch("https://helpdesk-vnv7.onrender.com/salvar-perfil", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -117,7 +117,7 @@ function salvarPerfilTecnico() {
 function carregarDados() {
     const emailUsuario = localStorage.getItem("usuarioLogado")
 
-    fetch("http://127.0.0.1:5000/meus-dados", {
+    fetch("https://helpdesk-vnv7.onrender.com/meus-dados", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -141,7 +141,7 @@ function carregarDados() {
 }
 
 function carregarChamados() {
-    fetch("http://127.0.0.1:5000/listar-chamados")
+    fetch("https://helpdesk-vnv7.onrender.com/listar-chamados")
         .then(resposta => resposta.json())
         .then(chamados => {
             const listaChamados = document.getElementById("lista-chamados");
@@ -179,7 +179,7 @@ function carregarChamados() {
 }
 
 function carregarTecnicos() {
-    fetch("http://127.0.0.1:5000/tecnicos")
+    fetch("https://helpdesk-vnv7.onrender.com/tecnicos")
         .then(resposta => resposta.json())
         .then(tecnicos => {
             const listaTecnicos = document.getElementById("lista-tecnicos");
@@ -230,7 +230,7 @@ function SolicitarTecnico(emailTecnico) {
 
     const emailCliente = localStorage.getItem("usuarioLogado");
 
-    fetch("http://127.0.0.1:5000/meus-chamados-cliente", {
+    fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-cliente", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -279,7 +279,7 @@ function SolicitarTecnico(emailTecnico) {
 function vincularTecnico(idChamado) {
     const emailTecnico = localStorage.getItem("tecnicoSelecionado");
 
-    fetch("http://127.0.0.1:5000/solicitar-tecnico", {
+    fetch("https://helpdesk-vnv7.onrender.com/solicitar-tecnico", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -310,7 +310,7 @@ function verCurriculo(nome, formacao, area, experiencia, resumo, email, telefone
 }
 
 function buscarCurriculoTecnico(emailTecnico) {
-    fetch("http://127.0.0.1:5000/buscar-tecnico", {
+    fetch("https://helpdesk-vnv7.onrender.com/buscar-tecnico", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -336,7 +336,7 @@ function buscarCurriculoTecnico(emailTecnico) {
 function chamadosTecnico() {
     const emailTecnico = localStorage.getItem("usuarioLogado");
 
-    fetch("http://127.0.0.1:5000/meus-chamados-tecnico", {
+    fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-tecnico", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -408,7 +408,7 @@ function chamadosTecnico() {
 function chamadosCliente() {
     const emailCliente = localStorage.getItem("usuarioLogado");
 
-    fetch("http://127.0.0.1:5000/meus-chamados-cliente", {
+    fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-cliente", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -492,7 +492,7 @@ function CriarChamado() {
         return;
     }
 
-    fetch("http://127.0.0.1:5000/criar-chamado", {
+    fetch("https://helpdesk-vnv7.onrender.com/criar-chamado", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -519,7 +519,7 @@ function CriarChamado() {
 function aceitarChamado(idChamado) {
     const emailTecnico = localStorage.getItem("usuarioLogado")
 
-    fetch("http://127.0.0.1:5000/aceitar-chamado", {
+    fetch("https://helpdesk-vnv7.onrender.com/aceitar-chamado", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -542,7 +542,7 @@ function aceitarChamado(idChamado) {
 function recusarChamado(idChamado) {
     const emailTecnico = localStorage.getItem("usuarioLogado")
 
-    fetch("http://127.0.0.1:5000/recusar-chamado", {
+    fetch("https://helpdesk-vnv7.onrender.com/recusar-chamado", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
