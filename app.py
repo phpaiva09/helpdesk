@@ -34,7 +34,7 @@ def login():
 
     cursor.execute(
         """
-        SELECT nome, email, senha, tipo
+        SELECT id, nome, email, senha, tipo
         FROM usuarios
         WHERE email = %s AND senha = %s
         """,
@@ -47,7 +47,10 @@ def login():
         return jsonify({
             "sucesso": True,
             "mensagem": "Login realizado com sucesso!",
-            "tipo": usuario[3]
+            "id": usuario[0],
+            "nome": usuario[1],
+            "email": usuario[2],
+            "tipo": usuario[4]
         })
 
     return jsonify({
@@ -187,7 +190,7 @@ def salvar_perfil():
             area = %s,
             experiencia = %s,
             resumo = %s
-        WHERE email = %s
+        WHERE email = %s AND tipo = 'tecnico'
         """,
         (nome, formacao, area, experiencia, resumo, email)
     )
@@ -364,6 +367,7 @@ def listar_meus_chamados_tecnico():
             ON solicitacoes.tecnico_id = tecnico.id
 
         WHERE tecnico.email = %s
+        AND solicitacoes.status != 'recusado'
         """,
         (email,)
     )

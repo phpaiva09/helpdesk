@@ -65,7 +65,8 @@ function login() {
                 return;
             }
 
-            localStorage.setItem("usuarioLogado", emailLogin);
+            localStorage.setItem("idUsuario", dados.id);
+            localStorage.setItem("usuarioLogado", dados.email);
             localStorage.setItem("tipoUsuario", dados.tipo);
 
             if (dados.tipo === "usuario") {
@@ -670,10 +671,11 @@ function fecharModalSolicitarTecnico() {
 }
 
 function sair() {
+    localStorage.removeItem("idUsuario");
     localStorage.removeItem("usuarioLogado");
     localStorage.removeItem("tipoUsuario");
 
-    window.location.href = "index.html"
+    window.location.href = "index.html";
 }
 
 window.addEventListener("load", () => {
