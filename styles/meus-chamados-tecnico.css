@@ -248,3 +248,46 @@ button:hover {
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+#modal-avaliacao textarea,
+#modal-avaliacao select {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #334155;
+    color: white;
+    outline: none;
+    font-size: 15px;
+    transition: 0.25s ease;
+}
+
+#modal-avaliacao textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#modal-avaliacao textarea:focus,
+#modal-avaliacao select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+#modal-avaliacao textarea::placeholder {
+    color: #cbd5e1;
+}
+
+#modal-avaliacao .modal-content {
+    width: 500px;
+    max-width: 90%;
+}
+
+#modal-avaliacao h3 {
+    margin-bottom: 15px;
+}
+
+#modal-avaliacao p {
+    margin-bottom: 15px;
+    color: #cbd5e1;
+}
