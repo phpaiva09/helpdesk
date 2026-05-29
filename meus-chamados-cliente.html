@@ -51,6 +51,28 @@
         </div>
     </div>
 
+    <div id="modal-avaliacao" class="modal">
+        <div class="modal-content">
+            <h3 id="titulo-avaliacao">Avaliar atendimento</h3>
+
+            <p id="texto-avaliacao"></p>
+
+            <textarea id="comentario-avaliacao" placeholder="Descreva como foi o atendimento ou o motivo"></textarea>
+
+            <select id="nota-avaliacao">
+                <option value="">Selecione uma nota</option>
+                <option value="1">1 estrela</option>
+                <option value="2">2 estrelas</option>
+                <option value="3">3 estrelas</option>
+                <option value="4">4 estrelas</option>
+                <option value="5">5 estrelas</option>
+            </select>
+
+            <button onclick="enviarAvaliacao()">Enviar avaliação</button>
+            <button onclick="pularAvaliacao()">Pular</button>
+        </div>
+    </div>
+
     <script>
         window.addEventListener("load", () => {
             document.body.classList.add("loaded");

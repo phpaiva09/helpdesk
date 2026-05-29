@@ -564,15 +564,20 @@ def finalizar_chamado():
 @app.route("/confirmar-chamado", methods=["POST"])
 def confirmar_chamado():
     dados = request.json
+
     id_chamado = dados.get("id")
+    comentario = dados.get("comentario")
+    avaliacao = dados.get("avaliacao")
 
     cursor.execute(
         """
         UPDATE chamados
-        SET status = %s
+        SET status = %s,
+            comentario_cliente = %s,
+            avaliacao = %s
         WHERE id = %s
         """,
-        ("finalizado", id_chamado)
+        ("finalizado", comentario, avaliacao if avaliacao else None, id_chamado)
     )
 
     conexao.commit()
@@ -586,15 +591,20 @@ def confirmar_chamado():
 @app.route("/nao-confirmar-chamado", methods=["POST"])
 def nao_confirmar_chamado():
     dados = request.json
+
     id_chamado = dados.get("id")
+    comentario = dados.get("comentario")
+    avaliacao = dados.get("avaliacao")
 
     cursor.execute(
         """
         UPDATE chamados
-        SET status = %s
+        SET status = %s,
+            comentario_cliente = %s,
+            avaliacao = %s
         WHERE id = %s
         """,
-        ("aceito", id_chamado)
+        ("aceito", comentario, avaliacao if avaliacao else None, id_chamado)
     )
 
     conexao.commit()

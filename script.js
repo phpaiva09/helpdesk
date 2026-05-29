@@ -1,3 +1,6 @@
+let idChamadoAvaliacao = null;
+let acaoAvaliacao = null;
+
 function cadastrar() {
     const nomeCadastro = document.getElementById("nome-cadastro").value;
     const emailCadastro = document.getElementById("email-cadastro").value;
@@ -540,11 +543,11 @@ ${chamado.nome_tecnico
                         ` : ""}
 
                         ${chamado.status === "aguardando_confirmacao" ? `
-                            <button onclick="confirmarChamado(${chamado.id})">
+                            <button onclick="abrirModalAvaliacao(${chamado.id}, 'confirmar')">
                                 Confirmar serviço
                             </button>
 
-                            <button onclick="naoConfirmarChamado(${chamado.id})">
+                            <button onclick="abrirModalAvaliacao(${chamado.id}, 'recusar')">
                                 Não confirmar
                             </button>
                         ` : ""}
@@ -654,6 +657,68 @@ function finalizarChamado(idChamado) {
                 window.location.href = "meus-chamados-tecnico.html";
             }, 1000);
         });
+}
+
+function abrirModalAvaliacao(idChamado, acao) {
+    idChamadoAvaliacao = idChamado;
+    acaoAvaliacao = acao;
+
+    document.getElementById("comentario-avaliacao").value = "";
+    document.getElementById("nota-avaliacao").value = "";
+
+    if (acao === "confirmar") {
+        document.getElementById("titulo-avaliacao").innerText = "Confirmar serviço";
+        document.getElementById("texto-avaliacao").innerText = "Conte como foi o atendimento e avalie de 1 a 5 estrelas.";
+    } else {
+        document.getElementById("titulo-avaliacao").innerText = "Não confirmar serviço";
+        document.getElementById("texto-avaliacao").innerText = "Informe o motivo e avalie o atendimento, se quiser.";
+    }
+
+    document.getElementById("modal-avaliacao").style.opacity = "1";
+    document.getElementById("modal-avaliacao").style.visibility = "visible";
+}
+
+function fecharModalAvaliacao() {
+    document.getElementById("modal-avaliacao").style.opacity = "0";
+    document.getElementById("modal-avaliacao").style.visibility = "hidden";
+}
+
+function enviarAvaliacao() {
+    const comentario = document.getElementById("comentario-avaliacao").value;
+    const nota = document.getElementById("nota-avaliacao").value;
+
+    salvarResultadoAvaliacao(comentario, nota);
+}
+
+function pularAvaliacao() {
+    salvarResultadoAvaliacao("", "");
+}
+
+function salvarResultadoAvaliacao(comentario, nota) {
+    const rota = acaoAvaliacao === "confirmar"
+        ? "/confirmar-chamado"
+        : "/nao-confirmar-chamado";
+
+    fetch("https://helpdesk-vnv7.onrender.com" + rota, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamadoAvaliacao,
+            comentario: comentario,
+            avaliacao: nota
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+        fecharModalAvaliacao();
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            window.location.href = "meus-chamados-cliente.html";
+        }, 1000);
+    });
 }
 
 function abrirModal(mensagem) {
