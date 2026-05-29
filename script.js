@@ -666,6 +666,10 @@ function abrirModalAvaliacao(idChamado, acao) {
     document.getElementById("comentario-avaliacao").value = "";
     document.getElementById("nota-avaliacao").value = "";
 
+    document.querySelectorAll(".avaliacao-estrelas span").forEach(estrela => {
+        estrela.classList.remove("ativa");
+    });
+
     if (acao === "confirmar") {
         document.getElementById("titulo-avaliacao").innerText = "Confirmar serviço";
         document.getElementById("texto-avaliacao").innerText = "Conte como foi o atendimento e avalie de 1 a 5 estrelas.";
@@ -718,6 +722,20 @@ function salvarResultadoAvaliacao(comentario, nota) {
         setTimeout(() => {
             window.location.href = "meus-chamados-cliente.html";
         }, 1000);
+    });
+}
+
+function selecionarNota(nota) {
+    document.getElementById("nota-avaliacao").value = nota;
+
+    const estrelas = document.querySelectorAll(".avaliacao-estrelas span");
+
+    estrelas.forEach((estrela, index) => {
+        if (index < nota) {
+            estrela.classList.add("ativa");
+        } else {
+            estrela.classList.remove("ativa");
+        }
     });
 }
 

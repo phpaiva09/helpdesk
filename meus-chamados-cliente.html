@@ -59,14 +59,15 @@
 
             <textarea id="comentario-avaliacao" placeholder="Descreva como foi o atendimento ou o motivo"></textarea>
 
-            <select id="nota-avaliacao">
-                <option value="">Selecione uma nota</option>
-                <option value="1">1 estrela</option>
-                <option value="2">2 estrelas</option>
-                <option value="3">3 estrelas</option>
-                <option value="4">4 estrelas</option>
-                <option value="5">5 estrelas</option>
-            </select>
+            <div class="avaliacao-estrelas">
+                <span onclick="selecionarNota(1)">★</span>
+                <span onclick="selecionarNota(2)">★</span>
+                <span onclick="selecionarNota(3)">★</span>
+                <span onclick="selecionarNota(4)">★</span>
+                <span onclick="selecionarNota(5)">★</span>
+            </div>
+
+            <input type="hidden" id="nota-avaliacao">
 
             <button onclick="enviarAvaliacao()">Enviar avaliação</button>
             <button onclick="pularAvaliacao()">Pular</button>

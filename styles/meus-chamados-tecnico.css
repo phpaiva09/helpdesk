@@ -291,3 +291,26 @@ button:hover {
     margin-bottom: 15px;
     color: #cbd5e1;
 }
+
+.avaliacao-estrelas {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0 20px;
+}
+
+.avaliacao-estrelas span {
+    font-size: 38px;
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.avaliacao-estrelas span:hover {
+    transform: scale(1.15);
+}
+
+.avaliacao-estrelas span.ativa {
+    color: #fbbf24;
+}
