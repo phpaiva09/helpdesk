@@ -80,7 +80,7 @@ function login() {
 }
 
 function salvarPerfilTecnico() {
-    const emailTecnico = localStorage.getItem("usuarioLogado");
+    const idTecnico = localStorage.getItem("idUsuario");
 
     const nome = document.getElementById("nome-tecnico").value;
     const formacao = document.getElementById("formacao-tecnico").value;
@@ -89,7 +89,7 @@ function salvarPerfilTecnico() {
     const resumo = document.getElementById("resumo-tecnico").value;
 
     console.log(nome, formacao, area, experiencia, resumo);
-    console.log("Email logado:", emailTecnico);
+    console.log("ID logado:", idTecnico);
 
     fetch("https://helpdesk-vnv7.onrender.com/salvar-perfil", {
         method: "POST",
@@ -97,7 +97,7 @@ function salvarPerfilTecnico() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailTecnico,
+            id: idTecnico,
             nome: nome,
             formacao: formacao,
             area: area,
@@ -116,7 +116,7 @@ function salvarPerfilTecnico() {
 }
 
 function carregarDados() {
-    const emailUsuario = localStorage.getItem("usuarioLogado")
+    const idUsuario = localStorage.getItem("idUsuario");
 
     fetch("https://helpdesk-vnv7.onrender.com/meus-dados", {
         method: "POST",
@@ -124,7 +124,7 @@ function carregarDados() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailUsuario,
+            id: idUsuario
         })
     })
         .then(resposta => resposta.json())
@@ -227,7 +227,7 @@ function carregarTecnicos() {
 }
 
 function SolicitarTecnico(emailTecnico) {
-    localStorage.setItem("tecnicoSelecionado", emailTecnico);
+    const idCliente = localStorage.getItem("idUsuario");
 
     const emailCliente = localStorage.getItem("usuarioLogado");
 
@@ -237,7 +237,7 @@ function SolicitarTecnico(emailTecnico) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailCliente
+            id: idCliente
         })
     })
         .then(resposta => resposta.json())
@@ -320,22 +320,22 @@ function buscarCurriculoTecnico(emailTecnico) {
             email: emailTecnico
         })
     })
-    .then(resposta => resposta.json())
-    .then(tecnico => {
-        verCurriculo(
-            tecnico.nome,
-            tecnico.formacao,
-            tecnico.area,
-            tecnico.experiencia,
-            tecnico.resumo,
-            tecnico.email,
-            tecnico.telefone
-        );
-    })
+        .then(resposta => resposta.json())
+        .then(tecnico => {
+            verCurriculo(
+                tecnico.nome,
+                tecnico.formacao,
+                tecnico.area,
+                tecnico.experiencia,
+                tecnico.resumo,
+                tecnico.email,
+                tecnico.telefone
+            );
+        })
 }
 
 function chamadosTecnico() {
-    const emailTecnico = localStorage.getItem("usuarioLogado");
+    const idTecnico = localStorage.getItem("idUsuario");
 
     fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-tecnico", {
         method: "POST",
@@ -343,7 +343,7 @@ function chamadosTecnico() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailTecnico,
+            id: idTecnico
         })
     })
         .then(resposta => resposta.json())
@@ -391,7 +391,7 @@ function chamadosTecnico() {
                             ${chamado.status}
                         </p>
 
-                        ${chamado.status !== "aceito" ? `
+                        ${chamado.status === "solicitado" ? `
                             <button onclick="aceitarChamado(${chamado.id})">
                                 Aceitar
                             </button>
@@ -405,6 +405,18 @@ function chamadosTecnico() {
                             <button onclick="finalizarChamado(${chamado.id})">
                                 Finalizar chamado
                             </button>
+                        ` : ""}
+
+                        ${chamado.status === "aguardando_confirmacao" ? `
+                            <p>
+                                <strong>Aguardando confirmação do cliente</strong>
+                            </p>
+                        ` : ""}
+
+                        ${chamado.status === "finalizado" ? `
+                            <p>
+                                <strong>Chamado finalizado</strong>
+                            </p>
                         ` : ""}
                     </div>
                 `;
@@ -422,14 +434,14 @@ function confirmarChamado(idChamado) {
             id: idChamado
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
-        abrirModal(dados.mensagem);
+        .then(resposta => resposta.json())
+        .then(dados => {
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            window.location.href = "meus-chamados-cliente.html";
-        }, 1000);
-    });
+            setTimeout(() => {
+                window.location.href = "meus-chamados-cliente.html";
+            }, 1000);
+        });
 }
 
 function naoConfirmarChamado(idChamado) {
@@ -442,18 +454,18 @@ function naoConfirmarChamado(idChamado) {
             id: idChamado
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
-        abrirModal(dados.mensagem);
+        .then(resposta => resposta.json())
+        .then(dados => {
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            window.location.href = "meus-chamados-cliente.html";
-        }, 1000);
-    });
+            setTimeout(() => {
+                window.location.href = "meus-chamados-cliente.html";
+            }, 1000);
+        });
 }
 
 function chamadosCliente() {
-    const emailCliente = localStorage.getItem("usuarioLogado");
+    const idCliente = localStorage.getItem("idUsuario");
 
     fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-cliente", {
         method: "POST",
@@ -461,7 +473,7 @@ function chamadosCliente() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailCliente,
+            id: idCliente
         })
     })
         .then(resposta => resposta.json())
@@ -506,9 +518,15 @@ function chamadosCliente() {
                         </p>
                         <p>
                             <strong>Técnico responsável</strong><br>
-                            ${chamado.status === "aceito"
+                           ${chamado.tecnico
                         ? chamado.tecnico
                         : "Ainda não definido"
+                    }
+<br>
+
+${chamado.nome_tecnico
+                        ? chamado.nome_tecnico
+                        : ""
                     }<br>
 
                             ${chamado.status === "aceito"
@@ -538,7 +556,7 @@ function chamadosCliente() {
 }
 
 function CriarChamado() {
-    const emailUsuario = localStorage.getItem("usuarioLogado");
+    const idUsuario = localStorage.getItem("idUsuario");
 
     const titulo = document.getElementById("titulo-chamado").value;
     const categoria = document.getElementById("categoria-chamado").value;
@@ -556,7 +574,7 @@ function CriarChamado() {
         },
         body: JSON.stringify({
             titulo: titulo,
-            emailUsuario: emailUsuario,
+            idUsuario: idUsuario,
             categoria: categoria,
             resumo: resumo
         })
@@ -574,7 +592,7 @@ function CriarChamado() {
 }
 
 function aceitarChamado(idChamado) {
-    const emailTecnico = localStorage.getItem("usuarioLogado")
+    const idTecnico = localStorage.getItem("idUsuario");
 
     fetch("https://helpdesk-vnv7.onrender.com/aceitar-chamado", {
         method: "POST",
@@ -582,7 +600,7 @@ function aceitarChamado(idChamado) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailTecnico,
+            idTecnico: idTecnico,
             id: idChamado
         })
     })
@@ -597,7 +615,7 @@ function aceitarChamado(idChamado) {
 }
 
 function recusarChamado(idChamado) {
-    const emailTecnico = localStorage.getItem("usuarioLogado")
+    const idTecnico = localStorage.getItem("idUsuario");
 
     fetch("https://helpdesk-vnv7.onrender.com/recusar-chamado", {
         method: "POST",
@@ -605,7 +623,7 @@ function recusarChamado(idChamado) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: emailTecnico,
+            idTecnico: idTecnico,
             id: idChamado
         })
     })
@@ -629,14 +647,14 @@ function finalizarChamado(idChamado) {
             id: idChamado
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
-        abrirModal(dados.mensagem);
+        .then(resposta => resposta.json())
+        .then(dados => {
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            window.location.href = "meus-chamados-tecnico.html";
-        }, 1000);
-    });
+            setTimeout(() => {
+                window.location.href = "meus-chamados-tecnico.html";
+            }, 1000);
+        });
 }
 
 function abrirModal(mensagem) {
@@ -674,6 +692,7 @@ function sair() {
     localStorage.removeItem("idUsuario");
     localStorage.removeItem("usuarioLogado");
     localStorage.removeItem("tipoUsuario");
+    localStorage.removeItem("tecnicoSelecionado");
 
     window.location.href = "index.html";
 }
