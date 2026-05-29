@@ -409,6 +409,16 @@ def solicitar_tecnico():
         (id_chamado, tecnico_id, "solicitado")
     )
 
+    cursor.execute(
+        """
+        UPDATE chamados
+        SET status = %s
+        WHERE id = %s
+        """,
+        ("solicitado", id_chamado)
+    )
+
+
     conexao.commit()
 
     return jsonify({
