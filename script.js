@@ -519,22 +519,17 @@ function chamadosCliente() {
                             ${chamado.status}
                         </p>
                         <p>
+                            <strong>Técnico responsável</strong><br>   
+                        <p>
                             <strong>Técnico responsável</strong><br>
-                           ${chamado.tecnico
-                        ? chamado.tecnico
-                        : "Ainda não definido"
-                    }
-<br>
 
-${chamado.nome_tecnico
-                        ? chamado.nome_tecnico
-                        : ""
-                    }<br>
-
-                            ${chamado.status === "aceito"
-                        ? chamado.nome_tecnico
-                        : ""
-                    }
+                            ${chamado.tecnico
+                                ? `
+                                    ${chamado.nome_tecnico}<br>
+                                    ${chamado.tecnico}
+                                `
+                                : "Ainda não definido"
+                            }
                         </p>
                         ${chamado.tecnico ? `
                             <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">
@@ -704,17 +699,17 @@ function enviarAvaliacao() {
             avaliacao: nota
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
+        .then(resposta => resposta.json())
+        .then(dados => {
 
-        fecharModalAvaliacao();
+            fecharModalAvaliacao();
 
-        abrirModal(dados.mensagem);
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-    });
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        });
 }
 
 function pularAvaliacao() {
@@ -730,17 +725,17 @@ function pularAvaliacao() {
             avaliacao: null
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
+        .then(resposta => resposta.json())
+        .then(dados => {
 
-        fecharModalAvaliacao();
+            fecharModalAvaliacao();
 
-        abrirModal(dados.mensagem);
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-    });
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        });
 }
 
 function salvarResultadoAvaliacao(comentario, nota) {
@@ -759,15 +754,15 @@ function salvarResultadoAvaliacao(comentario, nota) {
             avaliacao: nota
         })
     })
-    .then(resposta => resposta.json())
-    .then(dados => {
-        fecharModalAvaliacao();
-        abrirModal(dados.mensagem);
+        .then(resposta => resposta.json())
+        .then(dados => {
+            fecharModalAvaliacao();
+            abrirModal(dados.mensagem);
 
-        setTimeout(() => {
-            window.location.href = "meus-chamados-cliente.html";
-        }, 1000);
-    });
+            setTimeout(() => {
+                window.location.href = "meus-chamados-cliente.html";
+            }, 1000);
+        });
 }
 
 function selecionarNota(nota) {
