@@ -249,6 +249,19 @@ button:hover {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+#modal-avaliacao {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+    z-index: 1000;
+}
+
 #modal-avaliacao textarea,
 #modal-avaliacao select {
     width: 100%;
@@ -279,8 +292,14 @@ button:hover {
 }
 
 #modal-avaliacao .modal-content {
+    background-color: #1e293b;
     width: 500px;
     max-width: 90%;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    color: white;
 }
 
 #modal-avaliacao h3 {
@@ -312,5 +331,5 @@ button:hover {
 }
 
 .avaliacao-estrelas span.ativa {
-    color: #fbbf24;
+    color: #60a5fa;
 }

@@ -546,7 +546,6 @@ ${chamado.nome_tecnico
                             <button onclick="abrirModalAvaliacao(${chamado.id}, 'confirmar')">
                                 Confirmar serviço
                             </button>
-
                             <button onclick="abrirModalAvaliacao(${chamado.id}, 'recusar')">
                                 Não confirmar
                             </button>
@@ -688,14 +687,60 @@ function fecharModalAvaliacao() {
 }
 
 function enviarAvaliacao() {
-    const comentario = document.getElementById("comentario-avaliacao").value;
-    const nota = document.getElementById("nota-avaliacao").value;
+    const comentario =
+        document.getElementById("comentario-avaliacao").value;
 
-    salvarResultadoAvaliacao(comentario, nota);
+    const nota =
+        document.getElementById("nota-avaliacao").value;
+
+    fetch("https://helpdesk-vnv7.onrender.com/confirmar-chamado", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamadoAvaliacao,
+            comentario: comentario,
+            avaliacao: nota
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+
+        fecharModalAvaliacao();
+
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    });
 }
 
 function pularAvaliacao() {
-    salvarResultadoAvaliacao("", "");
+
+    fetch("https://helpdesk-vnv7.onrender.com/confirmar-chamado", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: idChamadoAvaliacao,
+            comentario: "",
+            avaliacao: null
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+
+        fecharModalAvaliacao();
+
+        abrirModal(dados.mensagem);
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    });
 }
 
 function salvarResultadoAvaliacao(comentario, nota) {

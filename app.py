@@ -563,6 +563,7 @@ def finalizar_chamado():
 
 @app.route("/confirmar-chamado", methods=["POST"])
 def confirmar_chamado():
+
     dados = request.json
 
     id_chamado = dados.get("id")
@@ -572,12 +573,18 @@ def confirmar_chamado():
     cursor.execute(
         """
         UPDATE chamados
-        SET status = %s,
+        SET
+            status = %s,
             comentario_cliente = %s,
             avaliacao = %s
         WHERE id = %s
         """,
-        ("finalizado", comentario, avaliacao if avaliacao else None, id_chamado)
+        (
+            "finalizado",
+            comentario,
+            avaliacao,
+            id_chamado
+        )
     )
 
     conexao.commit()
