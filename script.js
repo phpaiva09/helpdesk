@@ -426,46 +426,6 @@ function chamadosTecnico() {
         })
 }
 
-function confirmarChamado(idChamado) {
-    fetch("https://helpdesk-vnv7.onrender.com/confirmar-chamado", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: idChamado
-        })
-    })
-        .then(resposta => resposta.json())
-        .then(dados => {
-            abrirModal(dados.mensagem);
-
-            setTimeout(() => {
-                window.location.href = "meus-chamados-cliente.html";
-            }, 1000);
-        });
-}
-
-function naoConfirmarChamado(idChamado) {
-    fetch("https://helpdesk-vnv7.onrender.com/nao-confirmar-chamado", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: idChamado
-        })
-    })
-        .then(resposta => resposta.json())
-        .then(dados => {
-            abrirModal(dados.mensagem);
-
-            setTimeout(() => {
-                window.location.href = "meus-chamados-cliente.html";
-            }, 1000);
-        });
-}
-
 function chamadosCliente() {
     const idCliente = localStorage.getItem("idUsuario");
 
@@ -478,77 +438,51 @@ function chamadosCliente() {
             id: idCliente
         })
     })
-        .then(resposta => resposta.json())
-        .then(chamados => {
-            const listaMeusChamados = document.getElementById("lista-meus-chamados-cliente");
+    .then(resposta => resposta.json())
+    .then(chamados => {
+        const listaMeusChamados = document.getElementById("lista-meus-chamados-cliente");
 
-            listaMeusChamados.innerHTML = chamados.map(chamado => {
-                return `
-                    <div class="card-chamado">
-                        <h3>${chamado.titulo || "Chamado sem título"}</h3>
+        listaMeusChamados.innerHTML = chamados.map(chamado => {
+            return `
+                <div class="card-chamado">
+                    <h3>${chamado.titulo || "Chamado sem título"}</h3>
 
-                        <hr>
+                    <hr>
 
-                        <p>
-                            <strong>Cliente</strong><br>
-                            ${chamado.nome || "Não informado"}
-                        </p>
+                    <p><strong>Cliente</strong><br>${chamado.nome || "Não informado"}</p>
+                    <p><strong>Email</strong><br>${chamado.email || "Não informado"}</p>
+                    <p><strong>Telefone</strong><br>${chamado.telefone || "Sem telefone"}</p>
+                    <p><strong>Categoria</strong><br>${chamado.categoria || "Não informada"}</p>
+                    <p><strong>Descrição</strong><br>${chamado.resumo || "Sem descrição"}</p>
+                    <p><strong>Status</strong><br>${chamado.status}</p>
 
-                        <p>
-                            <strong>Email</strong><br>
-                            ${chamado.email || "Não informado"}
-                        </p>
-
-                        <p>
-                            <strong>Telefone</strong><br>
-                            ${chamado.telefone || "Sem telefone"}
-                        </p>
-
-                        <p>
-                            <strong>Categoria</strong><br>
-                            ${chamado.categoria || "Não informada"}
-                        </p>
-
-                        <p>
-                            <strong>Descrição</strong><br>
-                            ${chamado.resumo || "Sem descrição"}
-                        </p>
-
-                        <p>
-                            <strong>Status</strong><br>
-                            ${chamado.status}
-                        </p>
-                        <p>
-                            <strong>Técnico responsável</strong><br>   
-                        <p>
-                            <strong>Técnico responsável</strong><br>
-
-                            ${chamado.tecnico
-                                ? `
-                                    ${chamado.nome_tecnico}<br>
-                                    ${chamado.tecnico}
-                                `
-                                : "Ainda não definido"
-                            }
-                        </p>
+                    <p>
+                        <strong>Técnico responsável</strong><br>
                         ${chamado.tecnico ? `
-                            <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">
-                                Ver currículo
-                            </button>
-                        ` : ""}
+                            ${chamado.nome_tecnico}<br>
+                            ${chamado.tecnico}
+                        ` : "Ainda não definido"}
+                    </p>
 
-                        ${chamado.status === "aguardando_confirmacao" ? `
-                            <button onclick="abrirModalAvaliacao(${chamado.id}, 'confirmar')">
-                                Confirmar serviço
-                            </button>
-                            <button onclick="abrirModalAvaliacao(${chamado.id}, 'recusar')">
-                                Não confirmar
-                            </button>
-                        ` : ""}
-                    </div>
-                `;
-            }).join("");
-        });
+                    ${chamado.tecnico ? `
+                        <button onclick="buscarCurriculoTecnico('${chamado.tecnico}')">
+                            Ver currículo
+                        </button>
+                    ` : ""}
+
+                    ${chamado.status === "aguardando_confirmacao" ? `
+                        <button onclick="abrirModalAvaliacao(${chamado.id}, 'confirmar')">
+                            Confirmar serviço
+                        </button>
+
+                        <button onclick="abrirModalAvaliacao(${chamado.id}, 'recusar')">
+                            Não confirmar
+                        </button>
+                    ` : ""}
+                </div>
+            `;
+        }).join("");
+    });
 }
 
 function CriarChamado() {
@@ -734,33 +668,6 @@ function pularAvaliacao() {
 
             setTimeout(() => {
                 location.reload();
-            }, 1000);
-        });
-}
-
-function salvarResultadoAvaliacao(comentario, nota) {
-    const rota = acaoAvaliacao === "confirmar"
-        ? "/confirmar-chamado"
-        : "/nao-confirmar-chamado";
-
-    fetch("https://helpdesk-vnv7.onrender.com" + rota, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: idChamadoAvaliacao,
-            comentario: comentario,
-            avaliacao: nota
-        })
-    })
-        .then(resposta => resposta.json())
-        .then(dados => {
-            fecharModalAvaliacao();
-            abrirModal(dados.mensagem);
-
-            setTimeout(() => {
-                window.location.href = "meus-chamados-cliente.html";
             }, 1000);
         });
 }
