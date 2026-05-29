@@ -227,9 +227,8 @@ function carregarTecnicos() {
 }
 
 function SolicitarTecnico(emailTecnico) {
+    localStorage.setItem("tecnicoSelecionado", emailTecnico);
     const idCliente = localStorage.getItem("idUsuario");
-
-    const emailCliente = localStorage.getItem("usuarioLogado");
 
     fetch("https://helpdesk-vnv7.onrender.com/meus-chamados-cliente", {
         method: "POST",
